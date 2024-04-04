@@ -16,20 +16,20 @@ def open_file_explorer():
 def update_recent_files(filePath):
     # Extract file name from the path
     file_name = os.path.basename(filePath)
-    openedFilesWindow.insert("", "end", values=(file_name,))
-    # Add file path and file name to dictionary
     file_dict[filePath] = file_name
+    openedFilesWindow.insert("", "end", values=(file_name,filePath))
+    # Add file path and file name to dictionary
+    
     
 def select_file(event):
     global selected_files
     items = openedFilesWindow.selection()
-    selected_files = [openedFilesWindow.item(item, "values")[0] for item in items]
+    selected_files = [openedFilesWindow.item(item, "values")[1] for item in items]
 
 def open_selected_file(): #open all the selected files
     for selected_file in selected_files:
         if selected_file:
             file_name = file_dict.get(selected_file)
-            print("Opening selected file:", selected_file)
             if file_name:
                 os.startfile(selected_file)
 

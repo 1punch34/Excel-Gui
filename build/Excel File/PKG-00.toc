@@ -1,5 +1,4 @@
-('C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel File\\Excel '
- 'File.pkg',
+('S:\\Work\\Interline\\Excel-Gui\\build\\Excel File\\Excel File.pkg',
  {'BINARY': True,
   'DATA': True,
   'EXECUTABLE': True,
@@ -11,41 +10,37 @@
   'SYMLINK': False},
  [('pyi-contents-directory _internal', '', 'OPTION'),
   ('PYZ-00.pyz',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel '
-   'File\\PYZ-00.pyz',
+   'S:\\Work\\Interline\\Excel-Gui\\build\\Excel File\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel '
-   'File\\localpycs\\struct.pyc',
+   'S:\\Work\\Interline\\Excel-Gui\\build\\Excel File\\localpycs\\struct.pyc',
    'PYMODULE'),
   ('pyimod01_archive',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel '
+   'S:\\Work\\Interline\\Excel-Gui\\build\\Excel '
    'File\\localpycs\\pyimod01_archive.pyc',
    'PYMODULE'),
   ('pyimod02_importers',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel '
+   'S:\\Work\\Interline\\Excel-Gui\\build\\Excel '
    'File\\localpycs\\pyimod02_importers.pyc',
    'PYMODULE'),
   ('pyimod03_ctypes',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel '
+   'S:\\Work\\Interline\\Excel-Gui\\build\\Excel '
    'File\\localpycs\\pyimod03_ctypes.pyc',
    'PYMODULE'),
   ('pyimod04_pywin32',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\build\\Excel '
+   'S:\\Work\\Interline\\Excel-Gui\\build\\Excel '
    'File\\localpycs\\pyimod04_pywin32.pyc',
    'PYMODULE'),
   ('pyiboot01_bootstrap',
-   'C:\\Users\\Danny\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'C:\\Users\\sanji\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
    'PYSOURCE'),
   ('pyi_rth_inspect',
-   'C:\\Users\\Danny\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'C:\\Users\\sanji\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
    'PYSOURCE'),
   ('pyi_rth__tkinter',
-   'C:\\Users\\Danny\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
+   'C:\\Users\\sanji\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
    'PYSOURCE'),
-  ('Excel File',
-   'C:\\Users\\Danny\\Documents\\Work Files\\Excel Gui\\Excel File.py',
-   'PYSOURCE')],
+  ('Excel File', 'S:\\Work\\Interline\\Excel-Gui\\Excel File.py', 'PYSOURCE')],
  'python312.dll',
  True,
  False,
