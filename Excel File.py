@@ -19,7 +19,10 @@ def update_recent_files(filePath):
     openedFilesWindow.insert("", "end", values=(filePath,file_name))
     # Add file path and file name to dictionary
     file_dict[filePath] = file_name
-    
+
+def clear_selection(event):
+    openedFilesWindow.selection_remove(openedFilesWindow.selection())  
+        
 def select_file(event):
     global selected_files
     items = openedFilesWindow.selection()
@@ -83,6 +86,6 @@ openedFilesWindow = ttk.Treeview(tableFrame, columns=("File Name",), show="headi
 openedFilesWindow.heading("File Name", text="File Name")
 openedFilesWindow.pack(fill=tk.BOTH, expand=True)
 openedFilesWindow.bind("<ButtonRelease-1>", select_file)
-
+openedFilesWindow.bind("<Button-3>", clear_selection)
 
 root.mainloop()
