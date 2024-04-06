@@ -3,89 +3,114 @@ from tkinter import filedialog
 from tkinter import ttk
 import os
 
-file_dict = {}
-selected_files = []
-
-def open_file_explorer():
-    filenames = filedialog.askopenfilenames(initialdir="/", title="Select files")
-    if filenames:
-        print("Selected files:", filenames)
-        for filename in filenames:
-            update_recent_files(filename)
-
-def update_recent_files(filePath):
-    # Extract file name from the path
-    file_name = os.path.basename(filePath)
-    openedFilesWindow.insert("", "end", values=(filePath,file_name))
-    # Add file path and file name to dictionary
-    file_dict[filePath] = file_name
-
-def clear_selection(event):
-    openedFilesWindow.selection_remove(openedFilesWindow.selection())  
+class File:
+    def __init__(self, file_path):
+        self.file_name = os.path.basename(file_path)
+        self.file_path = file_path
+        self.is_favorite = False
         
-def select_file(event):
-    global selected_files
-    items = openedFilesWindow.selection()
-    selected_files = [openedFilesWindow.item(item, "values")[1] for item in items]
 
-def open_selected_file(): #open all the selected files
-    for selected_file in selected_files:
-        if selected_file:
-            file_name = file_dict.get(selected_file)
-            print("Opening selected file:", selected_file)
-            if file_name:
-                os.startfile(selected_file)
+class FileExplorerApp:
+    def __init__(self, master):
+        self.master = master
+        master.title("File Explorer")
 
-def undefinedFunciton():
-    pass
+        # Get the screen width and height
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
 
-def close_app():
-    root.destroy()
+        # Set the window size and position
+        window_width = 600
+        window_height = 400
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        master.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
-# Create the main window
-root = tk.Tk()
-root.title("File Explorer")
+        # Dictionary to store file paths and names
+        self.file_dict = {}
 
-# Get the screen width and height
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+        # Create frame for buttons and table
+        self.buttonFrame = tk.Frame(master)
+        self.buttonFrame.place(relx=0.05, rely=0.1, relwidth=0.2, relheight=1)
 
-# Set the window size and position
-window_width = 600
-window_height = 400
-x = (screen_width - window_width) // 2
-y = (screen_height - window_height) // 2
-root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        # Button to open file explorer
+        self.openFileExplorerButton = tk.Button(self.buttonFrame, text="File Explorer", command=self.open_file_explorer, width=20, height=2)
+        self.openFileExplorerButton.pack(pady=10)
 
-# frame to hold the buttons and the table
-buttonFrame = tk.Frame(root)
-buttonFrame.place(relx=0.05, rely=0.1, relwidth=0.2, relheight=1)
+        # Button to open selected files
+        self.openSelectedFiles = tk.Button(self.buttonFrame, text="Open Files", command=self.open_selected_file, width=20, height=2)
+        self.openSelectedFiles.pack(pady=12)
 
-# button to open the file explorer
-openFileExplorerButton = tk.Button(buttonFrame, text="File Explorer", command=open_file_explorer, width=20, height=2)
-openFileExplorerButton.pack(pady=10)
+        # Placeholder button
+        self.functionButton = tk.Button(self.buttonFrame, text="undefined", command=self.undefinedFunction, width=20, height=2)
+        self.functionButton.pack(pady=12)
 
-# button to open the selected file
-openSelectedFiles = tk.Button(buttonFrame, text="Open Files", command=open_selected_file, width=20, height=2)
-openSelectedFiles.pack(pady=12)
+        # Button to close the application
+        self.closeButton = tk.Button(self.buttonFrame, text="Close", command=self.close_app, width=20, height=2)
+        self.closeButton.pack(pady=80)
 
+        # Create frame for table
+        self.tableFrame = tk.Frame(master)
+        self.tableFrame.place(relx=0.3, rely=0.1, relwidth=0.65, relheight=0.8)
 
-functionButton = tk.Button(buttonFrame, text="undefined", command=undefinedFunciton, width=20, height=2)
-functionButton.pack(pady=12)
+        # Table to display opened files
+        self.openedFilesWindow = ttk.Treeview(self.tableFrame, columns=("File Name",), show="headings", height=10)
+        self.openedFilesWindow.heading("File Name", text="File Name")
+        self.openedFilesWindow.pack(fill=tk.BOTH, expand=True)
+        self.openedFilesWindow.bind("<Double-1>", self.on_double_click)
+        self.openedFilesWindow.bind("<ButtonRelease-1>", self.select_file)
+        self.openedFilesWindow.bind("<Button-3>", self.clear_selection)
 
-# button to close the application
-closeButton = tk.Button(buttonFrame, text="Close", command=close_app, width=20, height=2)
-closeButton.pack(pady=80)
+    def open_file_explorer(self):
+        filenames = filedialog.askopenfilenames(initialdir="/", title="Select files")
+        if filenames:
+            print("Selected files:", filenames)
+            for filename in filenames:
+                self.update_recent_files(filename)
 
-# frame to hold the table
-tableFrame = tk.Frame(root)
-tableFrame.place(relx=0.3, rely=0.1, relwidth=0.65, relheight=0.8)
+    def update_recent_files(self, file_path):
+        # Create File object
+        file = File(file_path)
+        # Add file to dictionary
+        self.file_dict[file.file_name] = file
+        # Insert file name into treeview
+        self.openedFilesWindow.insert("", "end", values=(file.file_name,))
 
-# table to display opened files
-openedFilesWindow = ttk.Treeview(tableFrame, columns=("File Name",), show="headings", height=10)
-openedFilesWindow.heading("File Name", text="File Name")
-openedFilesWindow.pack(fill=tk.BOTH, expand=True)
-openedFilesWindow.bind("<ButtonRelease-1>", select_file)
-openedFilesWindow.bind("<Button-3>", clear_selection)
+    def clear_selection(self, event):
+        self.openedFilesWindow.selection_remove(self.openedFilesWindow.selection())
 
-root.mainloop()
+    def select_file(self, event):
+        global selected_files
+        items = self.openedFilesWindow.selection()
+        selected_files = [self.openedFilesWindow.item(item, "values")[0] for item in items]
+
+    def open_selected_file(self):
+        for selected_file in selected_files:
+            if selected_file:
+                file = self.file_dict.get(selected_file)
+                print("Opening selected file:", file.file_path)
+                if file:
+                    os.startfile(file.file_path)
+
+    def on_double_click(self, event):
+        item = self.openedFilesWindow.selection()[0]
+        file_name = self.openedFilesWindow.item(item, "values")[0]
+        file = self.file_dict.get(file_name)
+        if file:
+            if file.is_favorite:
+                self.openedFilesWindow.set(item, "#1", file_name)
+                file.is_favorite = False
+            else:
+                self.openedFilesWindow.set(item, "#1", "⭐ " + file_name)
+                file.is_favorite = True
+                
+    def undefinedFunction(self):
+        pass
+
+    def close_app(self):
+        self.master.destroy()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = FileExplorerApp(root)
+    root.mainloop()
