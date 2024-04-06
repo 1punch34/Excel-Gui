@@ -8,7 +8,6 @@ class File:
         self.file_name = os.path.basename(file_path)
         self.file_path = file_path
         self.is_favorite = False
-        
 
 class FileExplorerApp:
     def __init__(self, master):
@@ -74,7 +73,7 @@ class FileExplorerApp:
         # Add file to dictionary
         self.file_dict[file.file_name] = file
         # Insert file name into treeview
-        self.openedFilesWindow.insert("", "end", values=(file.file_name,))
+        self.openedFilesWindow.insert("", "end", values=(file.file_name, file))
 
     def clear_selection(self, event):
         self.openedFilesWindow.selection_remove(self.openedFilesWindow.selection())
@@ -82,26 +81,24 @@ class FileExplorerApp:
     def select_file(self, event):
         global selected_files
         items = self.openedFilesWindow.selection()
-        selected_files = [self.openedFilesWindow.item(item, "values")[0] for item in items]
+        selected_files = [self.openedFilesWindow.item(item, "values")[1] for item in items]
 
     def open_selected_file(self):
         for selected_file in selected_files:
             if selected_file:
-                file = self.file_dict.get(selected_file)
-                print("Opening selected file:", file.file_path)
-                if file:
-                    os.startfile(file.file_path)
+                print("Opening selected file:", selected_file.file_path)
+                os.startfile(selected_file.file_path)
 
     def on_double_click(self, event):
         item = self.openedFilesWindow.selection()[0]
-        file_name = self.openedFilesWindow.item(item, "values")[0]
-        file = self.file_dict.get(file_name)
+        file = self.openedFilesWindow.item(item, "values")[1]
+        
         if file:
             if file.is_favorite:
-                self.openedFilesWindow.set(item, "#1", file_name)
+                self.openedFilesWindow.set(item, "#1", file.file_name)
                 file.is_favorite = False
             else:
-                self.openedFilesWindow.set(item, "#1", "⭐ " + file_name)
+                self.openedFilesWindow.set(item, "#1", "⭐ " + file.file_name)
                 file.is_favorite = True
                 
     def undefinedFunction(self):
