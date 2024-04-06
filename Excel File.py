@@ -66,7 +66,6 @@ openFileExplorerButton.pack(pady=10)
 openSelectedFiles = tk.Button(buttonFrame, text="Open Files", command=open_selected_file, width=20, height=2)
 openSelectedFiles.pack(pady=12)
 
-
 functionButton = tk.Button(buttonFrame, text="undefined", command=undefinedFunciton, width=20, height=2)
 functionButton.pack(pady=12)
 
