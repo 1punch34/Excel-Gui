@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 import os
+import json
 
 class File:
     def __init__(self, file_path):
@@ -60,6 +61,9 @@ class FileExplorerApp:
         self.openedFilesWindow.bind("<ButtonRelease-1>", self.select_file)
         self.openedFilesWindow.bind("<Button-3>", self.clear_selection)
 
+        # Load favorite files from JSON file
+        self.openFavoriteFiles()
+
     def open_file_explorer(self):
         filenames = filedialog.askopenfilenames(initialdir="/", title="Select files")
         if filenames:
@@ -71,9 +75,9 @@ class FileExplorerApp:
         # Create File object
         file = File(file_path)
         # Add file to dictionary
-        self.file_dict[file.file_name] = file
+        self.file_dict[file.file_path] = file
         # Insert file name into treeview
-        self.openedFilesWindow.insert("", "end", values=(file.file_name, file))
+        self.openedFilesWindow.insert("", "end", values=(file.file_name, file_path))
 
     def clear_selection(self, event):
         self.openedFilesWindow.selection_remove(self.openedFilesWindow.selection())
@@ -84,27 +88,63 @@ class FileExplorerApp:
         selected_files = [self.openedFilesWindow.item(item, "values")[1] for item in items]
 
     def open_selected_file(self):
-        for selected_file in selected_files:
-            if selected_file:
-                print("Opening selected file:", selected_file.file_path)
-                os.startfile(selected_file.file_path)
+        try:
+            if selected_files is not None:
+                for selected_file in selected_files:
+                    if selected_file:
+                        print("Opening selected file:", selected_file)
+                        os.startfile(selected_file)
+        except NameError:
+            print("No files selected. Please select files before opening.") 
 
     def on_double_click(self, event):
-        item = self.openedFilesWindow.selection()[0]
-        file = self.openedFilesWindow.item(item, "values")[1]
+        items = self.openedFilesWindow.selection()
+
+        for item in items:
+            # Retrieve both file path and file object
+            file_path = self.openedFilesWindow.item(item, "values")[1]
+            file = self.file_dict.get(file_path)
+            if file:
+                file_name = file.file_name
+                if file.is_favorite:
+                    self.openedFilesWindow.set(item, "#1", file_name)
+                    file.is_favorite = False
+                    self.file_dict[file_path] = file
+                else:
+                    self.openedFilesWindow.set(item, "#1", "⭐ " + file_name)
+                    file.is_favorite = True
+                    self.file_dict[file_path] = file
+        # Save favorite files to JSON file
+        self.save_favorite_files()
+
+    def openFavoriteFiles(self):
+        try:
+            with open("favorite_files.json", "r") as f:
+                data = json.load(f)
+                favorite_files = data.get("files", [])
+                for file_path in favorite_files:
+                    file = File(file_path)
+                    file.is_favorite = True
+                    # Add file to dictionary
+                    self.file_dict[file.file_path] = file
+                    # Insert file name into treeview
+                    self.openedFilesWindow.insert("", "end", values=("⭐ " + file.file_name, file_path))
+        except Exception:
+            pass
         
-        if file:
-            if file.is_favorite:
-                self.openedFilesWindow.set(item, "#1", file.file_name)
-                file.is_favorite = False
-            else:
-                self.openedFilesWindow.set(item, "#1", "⭐ " + file.file_name)
-                file.is_favorite = True
-                
+
+    def save_favorite_files(self):
+        favorite_files = [file_path for file_path, file in self.file_dict.items() if file.is_favorite]
+        data = {"files": favorite_files}
+        with open("favorite_files.json", "w") as f:
+            json.dump(data, f)
+
     def undefinedFunction(self):
         pass
 
     def close_app(self):
+        # Save favorite files before closing the application
+        self.save_favorite_files()
         self.master.destroy()
 
 if __name__ == "__main__":
